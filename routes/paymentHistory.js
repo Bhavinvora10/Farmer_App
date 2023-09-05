@@ -8,14 +8,14 @@ router.use(authController.protect);
 router
     .route('/')
     .get(authController.restrictTo('superAdmin'), paymentHistoryController.getAll)
+    .post(paymentHistoryController.createCheckOutSession)
+
+router
+    .route('/webhook')
+    .post(paymentHistoryController.createWebhook)
 
 router
     .route('/:id')
-    .post(paymentHistoryController.createCheckOutSession)
     .get(paymentHistoryController.get)
-
-router
-    .route('/webhook/:id')
-    .post(paymentHistoryController.createWebhook)
 
 module.exports = router;

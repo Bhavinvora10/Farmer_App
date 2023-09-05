@@ -6,7 +6,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 
 exports.createCheckOutSession = catchAsync (async (req, res, next) => {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.body.id);
     // console.log(user);
 
     const session = await stripe.checkout.sessions.create({
@@ -56,7 +56,7 @@ exports.createWebhook = catchAsync (async (req, res) => {
 
     let user;
     if (payHistory) {
-        user = await User.findById(req.params.id);
+        user = await User.findById(req.body.id);
         user.status = req.body.data.object.payment_status;
         user.save();
 
@@ -70,14 +70,13 @@ exports.createWebhook = catchAsync (async (req, res) => {
             message: "Payment successfull",
         });
     } else {
-        user = await User.findOneAndUpdate(
-            { _id: req.params.id },
-            { status: "failed", isActive: false },
-        );
+        user = await User.findById(req.body.id);
+        user.status = req.body.type;
+        user.save();
 
         await paymentHistory.findOneAndUpdate(
             { paymentBy: req.params.id },
-            { paymentStatus: "failed" },
+            { paymentStatus: user.status },
         );
 
         res.status(404).json({
