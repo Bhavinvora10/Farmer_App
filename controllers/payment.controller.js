@@ -2,11 +2,13 @@ const User = require('./../model/user');
 const paymentHistory = require('./../model/paymentHistory');
 const AppError = require("./../utils/appError");
 const catchAsync = require("./../utils/catchAsync");
+const bodyParser = require('body-parser');
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const {STATUS} = require('./../constant/constant');
 
 
 exports.createCheckOutSession = catchAsync (async (req, res, next) => {
-    const user = await User.findById(req.body.id);
+    const user = await User.findById(req.body.userId);
     // console.log(user);
 
     const session = await stripe.checkout.sessions.create({
@@ -46,18 +48,18 @@ exports.createCheckOutSession = catchAsync (async (req, res, next) => {
     res.status(200).json({
         status: 200,
         id: session.id,
-        URL: session.url,
-        session
+        URL: session.url
     });
 });
 
 exports.createWebhook = catchAsync (async (req, res) => {
     const payHistory = await paymentHistory.findOne({ checkOut_id: req.body.data.object.id });
-
+    console.log(payHistory)
+    console.log(req.body.data.object.status)
     let user;
     if (payHistory) {
-        user = await User.findById(req.body.id);
-        user.status = req.body.data.object.payment_status;
+        user = await User.findById(req.body.userId);
+        user.status = req.body.data.object.status;
         user.save();
 
         await paymentHistory.findOneAndUpdate(
@@ -70,18 +72,19 @@ exports.createWebhook = catchAsync (async (req, res) => {
             message: "Payment successfull",
         });
     } else {
-        user = await User.findById(req.body.id);
-        user.status = req.body.type;
-        user.save();
+        user = await User.findByIdAndUpdate(
+            { _id: req.body.userId },
+            { status: STATUS.FAILED, isActive: false }
+        );
 
         await paymentHistory.findOneAndUpdate(
             { paymentBy: req.params.id },
-            { paymentStatus: user.status },
+            { paymentStatus: STATUS.FAILED },
         );
 
         res.status(404).json({
             status: "404",
-            message: "Payment failed",
+            message: "Payment data not found",
         });
     }
 });
