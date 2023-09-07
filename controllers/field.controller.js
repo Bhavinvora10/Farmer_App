@@ -64,19 +64,19 @@ exports.update = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.delete = catchAsync(async (req, res, next) => {
-  const deleteFieldUser = await fieldUser.findByIdAndUpdate(
-    { _id: req.params.id },
-    { isActive: false },
-    { new: true }
-  );
+// exports.delete = catchAsync(async (req, res, next) => {
+//   const deleteFieldUser = await fieldUser.findByIdAndUpdate(
+//     { _id: req.params.id },
+//     { isActive: false },
+//     { new: true }
+//   );
 
-  if (!deleteFieldUser) {
-    return next(new AppError("No fielduser found with this ID", 404));
-  }
+//   if (!deleteFieldUser) {
+//     return next(new AppError("No fielduser found with this ID", 404));
+//   }
 
-  res.status(200).json({
-    status: 200,
-    message: "deleted successfully",
-  });
-});
+//   res.status(200).json({
+//     status: 200,
+//     message: "deleted successfully",
+//   });
+// });

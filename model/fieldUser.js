@@ -41,11 +41,6 @@ const fieldSchema = new mongoose.Schema({
             ref: 'Farmer',
         }
     ],
-    isActive: {
-        type: Boolean,
-        default: true,
-        select: false,
-    },
 }, {
     timestamps: true,
     toJSON: {

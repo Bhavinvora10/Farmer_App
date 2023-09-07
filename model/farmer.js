@@ -22,10 +22,6 @@ const farmerSchema = new mongoose.Schema(
       required: [true, "A farmer must have a last name"],
       trim: true, // remove whitespace in the beginning and end of the string.
     },
-    // registeredBy: {
-    //   type: mongoose.Schema.ObjectId,
-    //   ref: "fieldUser",
-    // },
     mobileNumber: {
       type: String,
       unique: true, // Unique is not a validater.
@@ -57,11 +53,6 @@ const farmerSchema = new mongoose.Schema(
         ref: "landImage",
       },
     ],
-    isActive: {
-      type: Boolean,
-      default: true,
-      select: false,
-    },
   },
   {
     timestamps: true,

@@ -66,7 +66,6 @@ exports.update = catchAsync (async (req, res, next) => {
 exports.delete = catchAsync (async (req, res, next) => {
     const deleteimage = await landImage.findByIdAndUpdate(
         { _id: req.params.id },
-        { isActive: false },
         { new: true });
 
     if (!deleteimage) {

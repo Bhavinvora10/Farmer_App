@@ -15,6 +15,6 @@ router
     .route('/:id')
     .get(fieldController.get)
     .patch(fieldController.update)
-    .delete(authController.restrictTo('superAdmin'), fieldController.delete)
+    // .delete(authController.restrictTo('superAdmin'), fieldController.delete)
 
 module.exports = router;

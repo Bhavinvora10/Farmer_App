@@ -2,20 +2,13 @@ const mongoose = require("mongoose");
 
 const landImageSchema = new mongoose.Schema(
   {
-    createdBy:  
-      {
+    createdBy: {
         type: mongoose.Schema.ObjectId,
         ref: "Farmer",
       },
    
     imageUrl: {
       type: String,
-    },
-
-    isActive: {
-      type: Boolean,
-      default: true,
-      select: false,
     },
   },
   { 

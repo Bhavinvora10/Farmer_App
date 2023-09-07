@@ -13,6 +13,6 @@ router
     .route('/:id')
     .get(farmerController.get)
     .patch(farmerController.update)
-    .delete(authController.restrictTo('field','superAdmin'), farmerController.delete)
+    // .delete(authController.restrictTo('field','superAdmin'), farmerController.delete)
 
 module.exports = router;

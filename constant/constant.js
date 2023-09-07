@@ -5,7 +5,7 @@ exports.ROLES = {
 };
 
 exports.STATUS = {
-    COMPLETE: 'complete',
+    COMPLETE: 'succeeded',
     FAILED: 'failed',
     PENDING: 'pending'
 };

@@ -42,13 +42,12 @@ const userSchema = new mongoose.Schema({
     passwordResetExpires: Date,
     status: {
       type: String,
-      enum: ['complete', 'failed', 'pending'],
+      enum: ['succeeded', 'failed', 'pending'],
       default: 'pending',
     },
     isActive: {
         type: Boolean,
         default: true,
-        select: false,
     },
     farmer: {
         type: mongoose.Schema.ObjectId,

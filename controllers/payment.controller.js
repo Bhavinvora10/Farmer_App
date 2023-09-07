@@ -39,7 +39,7 @@ exports.createCheckOutSession = catchAsync (async (req, res, next) => {
     };
 
     const newPayment = await paymentHistory.create({
-        paymentBy: req.params.id,
+        paymentBy: req.body.userId,
         amount: req.body.amount,
         paymentDate: Date.now(),
         checkOut_id: session.id
@@ -52,9 +52,13 @@ exports.createCheckOutSession = catchAsync (async (req, res, next) => {
     });
 });
 
-exports.createWebhook = catchAsync (async (req, res) => {
-    const payHistory = await paymentHistory.findOne({ checkOut_id: req.body.data.object.id });
+exports.createWebhook = async (req, res) => {
+    // const payHistory = await paymentHistory.findOne({ checkOut_id: req.body.data.object.id });
+    // console.log(payHistory)
+    // console.log(req.body.data.object.status)
+    const payHistory = await User.findOne({ email: req.body.data.object.billing_details.email });
     console.log(payHistory)
+    console.log(req.body.data.object.billing_details.email)
     console.log(req.body.data.object.status)
     let user;
     if (payHistory) {
@@ -63,18 +67,18 @@ exports.createWebhook = catchAsync (async (req, res) => {
         user.save();
 
         await paymentHistory.findOneAndUpdate(
-            { paymentBy: req.params.id },
+            { paymentBy: req.body.userId },
             { paymentStatus: user.status },
         );
 
         res.status(200).json({
             status: "200",
-            message: "Payment successfull",
+            message: `Payment ${user.status}`,
         });
     } else {
         user = await User.findByIdAndUpdate(
             { _id: req.body.userId },
-            { status: STATUS.FAILED, isActive: false }
+            { status: STATUS.FAILED }
         );
 
         await paymentHistory.findOneAndUpdate(
@@ -82,14 +86,14 @@ exports.createWebhook = catchAsync (async (req, res) => {
             { paymentStatus: STATUS.FAILED },
         );
 
-        res.status(404).json({
-            status: "404",
-            message: "Payment data not found",
+        res.status(400).json({
+            status: "400",
+            message: "Payment failed",
         });
     }
-});
+};
 
-exports.getAll = catchAsync(async (req, res, next) => {
+exports.getAll = catchAsync (async (req, res, next) => {
     const allPaymets = await paymentHistory.find();
 
     res.status(200).json({

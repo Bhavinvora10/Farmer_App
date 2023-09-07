@@ -59,7 +59,7 @@ exports.signup = catchAsync (async (req, res, next) => {
   });
 
 exports.login = catchAsync (async (req, res, next) => {
-  const {email, password}=req.body;
+  const { email, password } = req.body;
 
   // 1) Check email and password exist
   if (!email || !password) {
@@ -73,12 +73,13 @@ exports.login = catchAsync (async (req, res, next) => {
   }
 
   if (user.isActive === false) {
-    return next(new AppError("User is not active", 403));
+    return next(new AppError("User is not with active status", 403));
   }
   
-  if (user.status !== "paid" &&  user.role === "farmer") {
-    return next(new AppError(`Your payment is ${user.status}. So repay your payment...`));
+  if (user.status !== "complete" &&  user.role === "farmer") {
+    return next(new AppError(`Your payment is ${user.status}. Make the payment first...`));
   }
+
   delete user.password;
 
   createSendToken(user, 200, res);
