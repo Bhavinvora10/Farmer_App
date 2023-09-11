@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const validator = require('validator');
-const paymentHistory = require('./paymentHistory');
 
 const farmerSchema = new mongoose.Schema(
   {
@@ -76,12 +75,6 @@ farmerSchema.virtual("landImages", {
   foreignField: "createdBy",
   localField: "_id",
 });
-
-// farmerSchema.pre('save', async function(next) {
-//   const farmerPromises = this.paymentIds.map(async id => await paymentHistory.findById(id));
-//   this.paymentIds = await Promise.all(farmerPromises);
-//   next();
-// });
 
 farmerSchema.pre(/^find/, function (next) {
   this.populate({

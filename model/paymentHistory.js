@@ -21,9 +21,9 @@ const paymentHistorySchema = new mongoose.Schema(
       type:String
     },
 
-    paymentStatus: {
+    status: {
       type: String,
-      enum: ['succeeded', 'failed', 'pending'],
+      enum: ['complete', 'failed', 'pending'],
       default: 'pending'
     },
   },

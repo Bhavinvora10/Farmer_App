@@ -5,7 +5,7 @@ const catchAsync = require('./../utils/catchAsync');
 
 exports.create = catchAsync(async (req, res, next) => {
     const newFieldUser = await fieldUser.create({
-        userId: req.body.id,
+        userId: req.body.userId,
         parentId: req.user._id,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -14,7 +14,7 @@ exports.create = catchAsync(async (req, res, next) => {
     // console.log(newFieldUser);
 
     await User.findByIdAndUpdate(
-      { _id: req.body.id },
+      { _id: req.body.userId },
       { fielduser: newFieldUser._id },
     );
 

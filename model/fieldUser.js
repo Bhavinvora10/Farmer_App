@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const Farmer = require('./farmer');
 
 const fieldSchema = new mongoose.Schema({
     userId: {
@@ -56,13 +55,6 @@ fieldSchema.virtual("farmer", {
     foreignField: 'createdBy',
     localField: "_id",
 });
-
-// Document Middleware
-// fieldSchema.pre('save', async function(next) {
-//     const fieldPromises = this.farmers.map(async id => await Farmer.findById(id));
-//     this.farmers = await Promise.all(fieldPromises);
-//     next();
-// });
 
 // Query Middleware
 fieldSchema.pre(/^find/, function(next) {

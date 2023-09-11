@@ -76,8 +76,8 @@ exports.login = catchAsync (async (req, res, next) => {
     return next(new AppError("User is not with active status", 403));
   }
   
-  if (user.status !== "complete" &&  user.role === "farmer") {
-    return next(new AppError(`Your payment is ${user.status}. Make the payment first...`));
+  if (user.paymentStatus !== "complete" &&  user.role === "farmer") {
+    return next(new AppError(`Your payment is ${user.paymentStatus}. Please make a payment first...`));
   }
 
   delete user.password;

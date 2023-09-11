@@ -22,17 +22,19 @@ exports.create = catchAsync (async (req, res, next) => {
         role: req.body.role,
     });
 
-    const customer = await stripe.customers.create({
-        name: newUser.name,
-        email: newUser.email,
-        description: "land farm's farmer"
-    });
+    if (req.body.role === "farmer") {
+        const customer = await stripe.customers.create({
+            name: newUser.name,
+            email: newUser.email,
+            description: "land farm's farmer"
+        });
 
-    newUser = await User.findOneAndUpdate(
-        { _id: newUser._id },
-        { customerId: customer.id },
-        { new: true }
-    );
+        newUser = await User.findOneAndUpdate(
+            { _id: newUser._id },
+            { customerId: customer.id },
+            { new: true }
+        );
+    };
 
     await sendEmail({
         email: newUser.email,

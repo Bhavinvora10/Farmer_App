@@ -15,7 +15,7 @@ exports.create = catchAsync (async (req, res, next) => {
         { _id: req.user.farmer._id },
         { $push: { landImagesId: newimage._id } },
         { new: true });
-        // console.log("data", data);
+        // console.log(data);
 
     res.status(200).json({
         status: 200,

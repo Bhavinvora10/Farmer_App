@@ -1,11 +1,9 @@
 const User = require('./../model/user');
 const paymentHistory = require('./../model/paymentHistory');
-const AppError = require("./../utils/appError");
-const catchAsync = require("./../utils/catchAsync");
-const bodyParser = require('body-parser');
+const AppError = require('./../utils/appError');
+const catchAsync = require('./../utils/catchAsync');
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-const {STATUS} = require('./../constant/constant');
-
+const { STATUS } = require('./../constant/constant');
 
 exports.createCheckOutSession = catchAsync (async (req, res, next) => {
     const user = await User.findById(req.body.userId);
@@ -47,43 +45,44 @@ exports.createCheckOutSession = catchAsync (async (req, res, next) => {
 
     res.status(200).json({
         status: 200,
-        id: session.id,
+        checkOut_id: session.id,
         URL: session.url
     });
 });
 
 exports.createWebhook = async (req, res) => {
-    // const payHistory = await paymentHistory.findOne({ checkOut_id: req.body.data.object.id });
+    let payHistory;
+    payHistory = await paymentHistory.findOne({ checkOut_id: req.body.data.object.id });
     // console.log(payHistory)
     // console.log(req.body.data.object.status)
-    const payHistory = await User.findOne({ email: req.body.data.object.billing_details.email });
-    console.log(payHistory)
-    console.log(req.body.data.object.billing_details.email)
-    console.log(req.body.data.object.status)
+
     let user;
     if (payHistory) {
         user = await User.findById(req.body.userId);
-        user.status = req.body.data.object.status;
+        user.paymentStatus = req.body.data.object.status;
         user.save();
 
         await paymentHistory.findOneAndUpdate(
             { paymentBy: req.body.userId },
-            { paymentStatus: user.status },
+            { status: user.paymentStatus },
+            { new: true }
         );
 
         res.status(200).json({
             status: "200",
-            message: `Payment ${user.status}`,
+            message: `Payment ${user.paymentStatus}`,
         });
     } else {
         user = await User.findByIdAndUpdate(
             { _id: req.body.userId },
-            { status: STATUS.FAILED }
+            { paymentStatus: STATUS.FAILED },
+            { new: true }
         );
 
         await paymentHistory.findOneAndUpdate(
-            { paymentBy: req.params.id },
-            { paymentStatus: STATUS.FAILED },
+            { paymentBy: req.body.userId },
+            { status: STATUS.FAILED },
+            { new: true }
         );
 
         res.status(400).json({
