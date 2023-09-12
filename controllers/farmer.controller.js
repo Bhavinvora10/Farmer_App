@@ -80,20 +80,3 @@ exports.update = catchAsync(async (req, res, next) => {
         message: "Update successfully",
     });
 });
-
-// exports.delete = catchAsync(async (req, res, next) => {
-//     const deleteFarmer = await Farmer.findOneAndUpdate(
-//         { _id: req.params.id },
-//         { isActive: false },
-//         { new: true }
-//     );
-
-//     if (!deleteFarmer) {
-//         return next(new AppError('No farmer found with this ID', 404));
-//     };
-
-//     res.status(200).json({
-//         status: 200,
-//         message: "deleted successfully"
-//     });
-// });

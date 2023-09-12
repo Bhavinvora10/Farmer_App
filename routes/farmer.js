@@ -7,12 +7,11 @@ const authController = require('../controllers/auth.controller')
 router.use(authController.protect);
 router
     .route('/')
-    .get(farmerController.getAll)
+    .get(authController.restrictTo('field','superAdmin'), farmerController.getAll)
     .post(authController.restrictTo('field','superAdmin'), farmerController.create)
 router
     .route('/:id')
-    .get(farmerController.get)
-    .patch(farmerController.update)
-    // .delete(authController.restrictTo('field','superAdmin'), farmerController.delete)
+    .get(authController.restrictTo('field','superAdmin'), farmerController.get)
+    .patch(authController.restrictTo('farmer'), farmerController.update)
 
 module.exports = router;

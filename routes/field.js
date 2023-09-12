@@ -8,13 +8,12 @@ router.use(authController.protect);
 
 router
     .route('/')
-    .get(fieldController.getAll)
+    .get(authController.restrictTo('superAdmin'), fieldController.getAll)
     .post(authController.restrictTo('superAdmin'), fieldController.create)
 
 router
     .route('/:id')
-    .get(fieldController.get)
-    .patch(fieldController.update)
-    // .delete(authController.restrictTo('superAdmin'), fieldController.delete)
+    .get(authController.restrictTo('field','superAdmin'), fieldController.get)
+    .patch(authController.restrictTo('field'), fieldController.update)
 
 module.exports = router;

@@ -23,7 +23,7 @@ const paymentHistorySchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ['complete', 'failed', 'pending'],
+      enum: ['complete', 'failed', 'pending', 'expired'],
       default: 'pending'
     },
   },

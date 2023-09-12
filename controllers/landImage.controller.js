@@ -19,7 +19,8 @@ exports.create = catchAsync (async (req, res, next) => {
 
     res.status(200).json({
         status: 200,
-        message: "landImage created",   
+        message: "landImage created",
+        data: newimage
     });
 });
 

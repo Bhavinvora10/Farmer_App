@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema({
     passwordResetExpires: Date,
     paymentStatus: {
       type: String,
-      enum: ['complete', 'failed', 'pending'],
+      enum: ['complete', 'failed', 'pending', 'expired'],
       default: 'pending',
     },
     isActive: {

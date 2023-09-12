@@ -75,13 +75,13 @@ exports.createWebhook = async (req, res) => {
     } else {
         user = await User.findByIdAndUpdate(
             { _id: req.body.userId },
-            { paymentStatus: STATUS.FAILED },
+            { paymentStatus: req.body.data.object.status },
             { new: true }
         );
 
         await paymentHistory.findOneAndUpdate(
             { paymentBy: req.body.userId },
-            { status: STATUS.FAILED },
+            { status: req.body.data.object.status },
             { new: true }
         );
 
